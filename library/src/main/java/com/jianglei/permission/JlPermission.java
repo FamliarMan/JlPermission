@@ -39,32 +39,32 @@ public class JlPermission {
                 deniedPermissions.add(permission);
             }
         }
-        if(deniedPermissions.size() == 0){
+        if (deniedPermissions.size() == 0) {
             onPermissionResultListener.onGranted(grantedPermissions.toArray(new String[grantedPermissions.size()]));
             return;
         }
         PermissionFragment fragment = getFragment(activity);
         fragment.requestPermissions(deniedPermissions.toArray(new String[deniedPermissions.size()]),
                 new ActivityCompat.OnRequestPermissionsResultCallback() {
-            @Override
-            public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-                deniedPermissions.clear();
-                for (int i = 0; i < grantResults.length; ++i) {
-                    if (grantResults[i] == PackageManager.PERMISSION_GRANTED) {
-                        grantedPermissions.add(permissions[i]);
-                    } else {
-                        deniedPermissions.add(permissions[i]);
+                    @Override
+                    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+                        deniedPermissions.clear();
+                        for (int i = 0; i < grantResults.length; ++i) {
+                            if (grantResults[i] == PackageManager.PERMISSION_GRANTED) {
+                                grantedPermissions.add(permissions[i]);
+                            } else {
+                                deniedPermissions.add(permissions[i]);
+                            }
+                        }
+                        if (grantedPermissions.size() != 0) {
+                            onPermissionResultListener.onGranted(grantedPermissions.toArray(new String[grantedPermissions.size()]));
+                        }
+                        if (deniedPermissions.size() != 0) {
+                            onPermissionResultListener.onDenied(deniedPermissions.toArray(
+                                    new String[deniedPermissions.size()]));
+                        }
                     }
-                }
-                if(grantedPermissions.size() != 0) {
-                    onPermissionResultListener.onGranted(grantedPermissions.toArray(new String[grantedPermissions.size()]));
-                }
-                if(deniedPermissions.size() != 0) {
-                    onPermissionResultListener.onDenied(deniedPermissions.toArray(
-                            new String[deniedPermissions.size()]));
-                }
-            }
-        });
+                });
     }
 
     private PermissionFragment getFragment(Activity activity) {
@@ -80,9 +80,12 @@ public class JlPermission {
     }
 
     public static Builder start(Activity activity) {
+        if (activity == null || (Build.VERSION.SDK_INT >= 17 && activity.isDestroyed())) {
+            throw new IllegalStateException("You can't apply for a permission from a destroyed activity");
+
+        }
         return new Builder(activity);
     }
-
 
 
     public static class Builder {
