@@ -49,6 +49,6 @@ publish {
     artifactId = 'jlpermission'//项目名称
     publishVersion = '1.0'//版本号
     desc = 'A library that can apply for permissions eazily'
-    website = 'git@github.com:FamliarMan/JlPermission.git'
+    website = 'https://github.com/FamliarMan/JlPermission'
     repoName ='Android-lib'
 }
