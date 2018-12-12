@@ -28,12 +28,14 @@ public class MainActivity extends AppCompatActivity {
                         .request(new OnPermissionResultListener() {
                             @Override
                             public void onGranted(String[] permissions) {
+                                //此处如果permssions为空，本方法不会被回调
                                 Toast.makeText(MainActivity.this, Arrays.toString(permissions)+" 申请成功",
                                         Toast.LENGTH_LONG).show();
                             }
 
                             @Override
                             public void onDenied(String[] permissions) {
+                                //此处如果permssions为空，本方法不会被回调
                                 Toast.makeText(MainActivity.this, Arrays.toString(permissions)+" 申请失败",
                                         Toast.LENGTH_LONG).show();
 
